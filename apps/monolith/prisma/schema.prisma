@@ -1,0 +1,489 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id            String    @id @default(uuid())
+  name          String
+  description   String?
+  sku           String    @unique
+  price         Float
+  stockQuantity Int       @default(0)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  categories    ProductCategory[]
+  ingredients   ProductIngredient[]
+  tags          ProductTag[]
+  channels      ProductChannel[]
+  variants      Variant[]
+  catalogs      CatalogProduct[]
+  media         Media[]
+  metafields    Metafield[]
+  lifecycle     ProductLifecycle?
+  bundles       BundleProduct[]
+  packaging     Packaging[]
+  barcodes      Barcode[]
+}
+
+model Category {
+  id           String            @id @default(uuid())
+  name         String
+  code         String            @unique
+  description  String?
+  isActive     Boolean           @default(true)
+  displayOrder Int               @default(0)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+  products     ProductCategory[]
+  
+  // Parent-child relationship
+  parentId     String?
+  parent       Category?         @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children     Category[]        @relation("CategoryHierarchy")
+}
+
+model Ingredient {
+  id          String              @id @default(uuid())
+  name        String
+  description String?
+  ewgScore    Int
+  category    String              // Will store IngredientCategory enum as string
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  products    ProductIngredient[]
+}
+
+model Tag {
+  id        String       @id @default(uuid())
+  name      String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  products  ProductTag[]
+}
+
+// Junction Tables
+model ProductCategory {
+  id         String   @id @default(uuid())
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([productId, categoryId])
+}
+
+model ProductIngredient {
+  id           String     @id @default(uuid())
+  product      Product    @relation(fields: [productId], references: [id])
+  productId    String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+
+  @@unique([productId, ingredientId])
+}
+
+model ProductTag {
+  id        String   @id @default(uuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  tagId     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, tagId])
+}
+
+model UserEvent {
+  id         String   @id @default(uuid())
+  userId     String
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+model Channel {
+  id          String    @id @default(uuid())
+  name        String
+  code        String    @unique
+  description String?
+  type        String    // e.g., 'ecommerce', 'marketplace', 'pos'
+  config      Json?     // Flexible configuration storage
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  // Relations
+  products    ProductChannel[]
+}
+
+model ProductChannel {
+  id        String   @id @default(uuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  channel   Channel  @relation(fields: [channelId], references: [id])
+  channelId String
+  price     Float?   // Channel-specific price
+  isActive  Boolean  @default(true)
+  metadata  Json?    // Channel-specific metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, channelId])
+}
+
+model Variant {
+  id            String    @id @default(uuid())
+  productId     String
+  sku           String    @unique
+  name          String
+  description   String?
+  price         Float
+  stockQuantity Int       @default(0)
+  isActive      Boolean   @default(true)
+  attributes    Json      // Store variant attributes (color, size, etc.)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  product       Product   @relation(fields: [productId], references: [id])
+}
+
+model Catalog {
+  id          String          @id @default(uuid())
+  name        String
+  description String?
+  code        String          @unique
+  isActive    Boolean         @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+  deletedAt   DateTime?
+  
+  // Relations
+  products    CatalogProduct[]
+}
+
+model CatalogProduct {
+  id           String   @id @default(uuid())
+  catalogId    String
+  productId    String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  
+  // Relations
+  catalog      Catalog  @relation(fields: [catalogId], references: [id])
+  product      Product  @relation(fields: [productId], references: [id])
+  
+  @@unique([catalogId, productId])
+}
+
+model Media {
+  id          String    @id @default(uuid())
+  type        String    // image, video, document
+  url         String
+  filename    String
+  mimeType    String
+  size        Int
+  alt         String?
+  title       String?
+  description String?
+  sortOrder   Int       @default(0)
+  productId   String?
+  isFeatured  Boolean   @default(false)
+  isPublic    Boolean   @default(false)
+  dimensions  Json?     // Store width, height, etc.
+  tags        String[]  // Store media tags
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  
+  // Relations
+  product     Product?  @relation(fields: [productId], references: [id])
+}
+
+model Packaging {
+  id           String    @id @default(uuid())
+  name         String
+  description  String?
+  dimensions   String?   // Format: LxWxH in cm
+  weight       Float?    // In grams
+  material     String?
+  isReusable   Boolean   @default(false)
+  isRecyclable Boolean   @default(false)
+  barcode      String?
+  type         String?
+  materialComposition String?
+  productId    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  // Relations
+  product      Product?  @relation(fields: [productId], references: [id])
+}
+
+model Metafield {
+  id          String    @id @default(uuid())
+  namespace   String    // e.g., product_extra, seo
+  key         String    // e.g., warranty_info, meta_description
+  value       String    // The metafield value
+  type        String    // text, number, json, date
+  description String?
+  productId   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  product     Product?  @relation(fields: [productId], references: [id])
+  
+  @@unique([namespace, key, productId])
+}
+
+enum LifecycleStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+  DISCONTINUED
+}
+
+model ProductLifecycle {
+  id            String         @id @default(uuid())
+  productId     String         @unique
+  status        LifecycleStatus
+  comment       String?
+  userId        String
+  scheduledDate DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  product       Product        @relation(fields: [productId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model AccessibilityCheck {
+  id             String   @id @default(uuid())
+  resourceType   String
+  resourceId     String
+  status         String
+  checkResult    Json
+  violationCount Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([resourceType, resourceId])
+  @@index([status])
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String
+  action       String
+  resourceType String
+  resourceId   String
+  changes      Json
+  timestamp    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([resourceType, resourceId])
+  @@index([timestamp])
+}
+
+model DataProtectionCheck {
+  id           String   @id @default(uuid())
+  resourceType String
+  resourceId   String
+  status       String
+  findings     Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([resourceType, resourceId])
+  @@index([status])
+}
+
+model Bundle {
+  id            String          @id @default(uuid())
+  name          String
+  description   String?
+  sku           String          @unique
+  price         Float
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+  
+  // Relations
+  products      BundleProduct[]
+}
+
+model BundleProduct {
+  id            String    @id @default(uuid())
+  bundleId      String
+  productId     String
+  quantity      Int       @default(1)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  bundle        Bundle    @relation(fields: [bundleId], references: [id])
+  product       Product   @relation(fields: [productId], references: [id])
+  
+  @@unique([bundleId, productId])
+}
+
+model User {
+  id            String      @id @default(uuid())
+  name          String
+  email         String      @unique
+  clerkId       String?     @unique
+  role          String      @default("viewer") // "admin", "content_editor", "product_manager", "viewer"
+  department    String?
+  isActive      Boolean     @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+  
+  // Relations
+  auditLogs         AuditLog[]
+  events            UserEvent[]
+  productLifecycles ProductLifecycle[]
+}
+
+enum AttributeType {
+  TEXT
+  NUMBER
+  BOOLEAN
+  DATE
+  SELECT
+  MULTI_SELECT
+  RICH_TEXT
+  COLOR
+  FILE
+}
+
+model AttributeGroup {
+  id          String      @id @default(uuid())
+  name        String
+  code        String      @unique
+  description String?
+  sortOrder   Int         @default(0)
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  attributes  Attribute[]
+}
+
+model Attribute {
+  id          String          @id @default(uuid())
+  name        String
+  code        String          @unique
+  description String?
+  type        AttributeType   @default(TEXT)
+  options     Json?           // For SELECT and MULTI_SELECT types
+  required    Boolean         @default(false)
+  active      Boolean         @default(true)
+  sortOrder   Int            @default(0)
+  isFilterable Boolean       @default(false)
+  isSearchable Boolean       @default(false)
+  validation  Json?          // JSON schema for validation rules
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Relations
+  groupId     String?
+  group       AttributeGroup? @relation(fields: [groupId], references: [id])
+  values      AttributeValue[]
+
+  @@index([groupId])
+}
+
+model AttributeValue {
+  id          String    @id @default(uuid())
+  entityId    String    // Generic foreign key to any entity (product, variant, etc.)
+  entityType  String    // Type of the entity (e.g., "product", "variant")
+  value       Json      // Actual value of the attribute
+  locale      String?   // Language code for localized values
+  channel     String?   // Channel code for channel-specific values
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  attributeId String
+  attribute   Attribute @relation(fields: [attributeId], references: [id])
+
+  @@index([entityId, entityType])
+  @@index([attributeId])
+  @@index([locale])
+  @@index([channel])
+}
+
+enum BarcodeType {
+  EAN_13
+  EAN_8
+  UPC_A
+  UPC_E
+  CODE_128
+  CODE_39
+  QR_CODE
+  DATA_MATRIX
+}
+
+enum BarcodeStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  DEPRECATED
+}
+
+model Barcode {
+  id          String        @id @default(uuid())
+  value       String        @unique
+  type        BarcodeType
+  status      BarcodeStatus @default(ACTIVE)
+  productId   String
+  product     Product       @relation(fields: [productId], references: [id])
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+
+  @@index([value])
+  @@index([productId])
+}

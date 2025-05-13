@@ -1,0 +1,8 @@
+export enum ChannelType {
+  ECOMMERCE = 'ECOMMERCE',
+  MARKETPLACE = 'MARKETPLACE',
+  RETAIL = 'RETAIL',
+  WHOLESALE = 'WHOLESALE',
+  SOCIAL = 'SOCIAL',
+  OTHER = 'OTHER',
+} 

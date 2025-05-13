@@ -1,0 +1,7 @@
+export enum BarcodeStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  RESERVED = 'RESERVED',
+  EXPIRED = 'EXPIRED',
+  INVALID = 'INVALID',
+} 

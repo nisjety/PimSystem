@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pim-api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONOLITH_SERVICE_URL=http://pim-monolith:3001
+      - MONOLITH_SERVICE_TIMEOUT=5000
+      - AI_SERVICE_URL=http://pim-ai-service:3002
+      - AI_SERVICE_TIMEOUT=10000
+    networks:
+      - pim-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  pim-network:
+    name: pim-network
+    driver: bridge 
