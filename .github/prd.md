@@ -608,3 +608,5 @@ Alerts	notification-service	Slack API, Nodemailer
 External Sync	integration-service	WooCommerce API, Google Sheets
 Central Hub	api-gateway	REST + WebSocket (NestJS)
 
+#fetch:
+https://medium.com/@corrado.facchini/how-does-pim-work-in-it-architecture-product-information-management-1b6399fb7f8
