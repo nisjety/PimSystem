@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: white;
+  --foreground: rgb(17, 24, 39);
+  
+  --primary-50: rgb(239, 246, 255);
+  --primary-100: rgb(219, 234, 254);
+  --primary-200: rgb(191, 219, 254);
+  --primary-300: theme(colors.blue.300);
+  --primary-400: theme(colors.blue.400);
+  --primary-500: theme(colors.blue.500);
+  --primary-600: theme(colors.blue.600);
+  --primary-700: theme(colors.blue.700);
+  --primary-800: theme(colors.blue.800);
+  --primary-900: theme(colors.blue.900);
+  
+  --info: theme(colors.blue.500);
+  --success: theme(colors.green.500);
+  --warning: theme(colors.yellow.500);
+  --error: theme(colors.red.500);
+
+  --background-elevated: theme(colors.white);
+  --background-lowered: theme(colors.gray.50);
+}
+
+.dark {
+  --background: theme(colors.gray.900);
+  --foreground: theme(colors.gray.50);
+
+  --primary-50: theme(colors.gray.900);
+  --primary-100: theme(colors.gray.800);
+  --primary-200: theme(colors.gray.700);
+  --primary-300: theme(colors.gray.600);
+  --primary-400: theme(colors.gray.500);
+  --primary-500: theme(colors.blue.500);
+  --primary-600: theme(colors.blue.400);
+  --primary-700: theme(colors.blue.300);
+  --primary-800: theme(colors.blue.200);
+  --primary-900: theme(colors.blue.100);
+
+  --info: theme(colors.blue.400);
+  --success: theme(colors.green.400);
+  --warning: theme(colors.yellow.400);
+  --error: theme(colors.red.400);
+
+  --background-elevated: theme(colors.gray.800);
+  --background-lowered: theme(colors.gray.950);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .text-brand-gradient {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400;
+  }
+}

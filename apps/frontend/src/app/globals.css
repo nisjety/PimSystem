@@ -1,31 +1,12 @@
-/**
- * PIM SYSTEM DESIGN SYSTEM
- * 
- * A comprehensive set of styles, utilities, and guidelines for building
- * consistent, accessible, and visually appealing interfaces.
- *
- * TABLE OF CONTENTS:
- * 1. Base Imports
- * 2. Theme Variables
- * 3. Typography System
- * 4. Color System
- * 5. Component Styling
- * 6. Layout Utilities
- * 7. Animation Utilities
- * 8. Focus & Accessibility
- * 9. Responsive Adjustments
- */
-
 /* -----------------------------------------------------------------------------
  * 1. BASE IMPORTS
  * -------------------------------------------------------------------------- */
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* -----------------------------------------------------------------------------
- * 2. THEME VARIABLES
- * Core design tokens that define our visual language
- * -------------------------------------------------------------------------- */
-:root {
+@layer base {
+  :root {
   /**
    * Base colors
    * Use for page backgrounds and text colors
@@ -193,10 +174,9 @@
 
 /**
  * Dark theme variables
- * Automatically applied when .dark class is on html or when system prefers dark mode
+ * Applied when .dark class is on html element
  */
-@media (prefers-color-scheme: dark) {
-  :root {
+:root[class~="dark"] {
     /* Base colors - warm dark theme */
     --background: #2A2A2E; /* Dark with subtle brown undertone */
     --foreground: #f5f5f7; /* Apple's light gray text */
