@@ -1,88 +1,77 @@
+// src/lib/theme/theme-provider.tsx
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = 'dark' | 'light' | 'system';
 
-interface ThemeContextProps {
+type ThemeProviderProps = {
+  children: React.ReactNode;
+  defaultTheme?: Theme;
+};
+
+type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   isDark: boolean;
-}
+};
 
-const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
-
-interface ThemeProviderProps {
-  children: ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-}
+const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
-  storageKey = 'theme',
+  defaultTheme = 'light', // Default to light mode for cream & aubergine theme
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
-  const [isDark, setIsDark] = useState(false);
-
-  // Update theme
+  const [isDark, setIsDark] = useState<boolean>(false);
+  
   useEffect(() => {
-    const updateTheme = () => {
-      const root = window.document.documentElement;
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-      root.classList.remove('light', 'dark');
-
-      if (theme === 'system') {
-        root.classList.add(systemDark ? 'dark' : 'light');
-        setIsDark(systemDark);
-      } else {
-        root.classList.add(theme);
-        setIsDark(theme === 'dark');
-      }
-
-      // Only store explicit theme choices
-      if (theme !== 'system') {
-        localStorage.setItem(storageKey, theme);
-      }
-    };
-
-    updateTheme();
-
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
-      if (theme === 'system') {
-        updateTheme();
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [theme, storageKey]);
-
-  // Load stored theme
-  useEffect(() => {
-    const storedTheme = localStorage.getItem(storageKey) as Theme | null;
+    // Initialize theme from localStorage if available
+    const storedTheme = localStorage.getItem('theme') as Theme | null;
     if (storedTheme) {
       setTheme(storedTheme);
-    } else {
-      setTheme(defaultTheme);
     }
-  }, [defaultTheme, storageKey]);
+  }, []);
+  
+  useEffect(() => {
+    const root = window.document.documentElement;
+    
+    // Remove any existing theme classes
+    root.classList.remove('light', 'dark');
+
+    let effectiveTheme = theme;
+    
+    if (theme === 'system') {
+      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+    
+    // Apply the dark class only when dark theme is active
+    if (effectiveTheme === 'dark') {
+      root.classList.add('dark');
+      setIsDark(true);
+    } else {
+      setIsDark(false);
+    }
+    
+    // Store the theme preference
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
+    <ThemeProviderContext.Provider value={{ theme, setTheme, isDark }}>
       {children}
-    </ThemeContext.Provider>
+    </ThemeProviderContext.Provider>
   );
 }
 
-export function useTheme() {
-  const context = useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeProviderContext);
+  
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
+  
   return context;
-}
+};

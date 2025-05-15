@@ -1,3 +1,4 @@
+// src/components/core/ui/theme-switcher.tsx
 'use client';
 
 import { useTheme } from '@/lib/theme/theme-provider';
@@ -11,7 +12,7 @@ export function ThemeSwitcher() {
   
   const toggleMenu = () => setIsOpen(!isOpen);
   
-  // Icon based on current mode (light/dark) rather than theme setting
+  // Icon based on current mode (light/dark)
   const ThemeIcon = isDark ? Moon : Sun;
   
   return (
@@ -19,7 +20,7 @@ export function ThemeSwitcher() {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="p-1.5 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200"
+        className="p-1.5 rounded-md text-gray-700 dark:text-gray-300 hover:bg-primary-100 dark:hover:bg-primary-700/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200"
         onClick={toggleMenu}
         aria-label="Toggle theme"
         aria-expanded={isOpen}
@@ -36,7 +37,7 @@ export function ThemeSwitcher() {
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             id="theme-menu"
-            className="absolute right-0 mt-2 w-36 bg-background rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700"
+            className="absolute right-0 mt-2 w-36 bg-background-elevated rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700"
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="theme-menu-button"

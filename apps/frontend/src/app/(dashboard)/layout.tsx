@@ -7,12 +7,6 @@ import { useAuth } from '@clerk/nextjs';
 import { Sidebar } from '@/components/core/layout/sidebar';
 import { LoadingScreen } from '@/components/core/ui/loading-screen';
 
-/**
- * This layout handles:
- * 1. Authentication protection for dashboard routes
- * 2. Sidebar navigation as shown in Image 1
- * 3. Dashboard-specific layout 
- */
 export default function DashboardLayout({
   children,
 }: {
@@ -21,30 +15,29 @@ export default function DashboardLayout({
   const { userId, isLoaded } = useAuth();
   const router = useRouter();
 
-  // Auth protection - redirect if not authenticated
+  // Redirect unauthenticated users
   useEffect(() => {
     if (isLoaded && !userId) {
       router.push('/sign-in');
     }
   }, [userId, isLoaded, router]);
 
-  // Show loading screen while auth is being checked
   if (!isLoaded || !userId) {
     return <LoadingScreen />;
   }
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      {/* Sidebar navigation */}
+      {/* Sidebar (similar to Image 1) */}
       <Sidebar />
       
-      {/* Main content area */}
+      {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <main className="flex-1 overflow-auto">
-          <div className="container mx-auto px-6 py-8">
+        <div className="flex-1 overflow-auto" id="main-content">
+          <main className="p-6">
             {children}
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );

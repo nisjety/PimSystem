@@ -1,3 +1,4 @@
+// src/components/core/layout/footer.tsx
 'use client';
 
 import { useState, useEffect } from "react";
@@ -99,7 +100,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-background border-t border-gray-200 dark:border-gray-700 relative">
+    <footer className="bg-background-elevated border-t border-gray-200 dark:border-gray-700 relative">
       {/* Scroll to top button */}
       <AnimatedButton 
         isVisible={isVisible} 
@@ -177,11 +178,23 @@ export function Footer() {
           </div>
 
           {/* Social links */}
-          <div className="flex space-x-6">
-            <SocialLink href="#" Icon={Github} label="GitHub" />
-            <SocialLink href="#" Icon={Twitter} label="Twitter" />
-            <SocialLink href="#" Icon={Linkedin} label="LinkedIn" />
-          </div>
+            <div className="flex space-x-6">
+              <SocialLink 
+                href="https://github.com/nisjety/PimSystem" 
+                Icon={Github} 
+                label="GitHub" 
+              />
+              <SocialLink 
+                href="https://twitter.com/" 
+                Icon={Twitter} 
+                label="Twitter" 
+              />
+              <SocialLink 
+                href="https://linkedin.com" 
+                Icon={Linkedin} 
+                label="LinkedIn" 
+              />
+            </div>
         </motion.div>
 
         {/* Copyright */}
@@ -193,7 +206,7 @@ export function Footer() {
         >
           &copy; {new Date().getFullYear()} PimSystem. All rights reserved.
           <span className="inline-flex">
-            Made with <Heart className="h-3 w-3 text-error mx-1" /> by our team
+            Made with <Heart className="h-3 w-3 text-primary-500 mx-1" /> by our team
           </span>
         </motion.p>
       </div>
