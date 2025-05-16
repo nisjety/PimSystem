@@ -53,6 +53,7 @@
   --primary-700: #692757; /* Darker aubergine for hover/active */
   --primary-800: #5a2049; /* Very dark aubergine */
   --primary-900: #471938; /* Extremely dark aubergine */
+  --primary-950: #3a1530; /* Almost black aubergine */
   
   /**
    * Gray scale
@@ -68,6 +69,8 @@
   --gray-700: #515050; /* Darker cream - primary text */
   --gray-800: #3a3939; /* Very dark cream - headings */
   --gray-900: #1d1d1f; /* Almost black - high-emphasis text */
+  --gray-950: #0f0f10; /* Black - low-emphasis text */
+  --gray-1000: #000000; /* Pure black - for contrast */
   
   /**
    * Semantic colors

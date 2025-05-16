@@ -100,7 +100,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-background-elevated border-t border-gray-200 dark:border-gray-700 relative">
+    <footer className="border-t border-gray-200 dark:border-gray-700 relative">
       {/* Scroll to top button */}
       <AnimatedButton 
         isVisible={isVisible} 

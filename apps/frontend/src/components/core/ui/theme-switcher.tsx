@@ -20,11 +20,12 @@ export function ThemeSwitcher() {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="p-1.5 rounded-md text-gray-700 dark:text-gray-300 hover:bg-primary-100 dark:hover:bg-primary-700/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200"
+        className="p-1.5 rounded-md text-gray-900 dark:text-gray-100 hover:bg-white hover:shadow-md dark:hover:bg-primary-700/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200"
         onClick={toggleMenu}
         aria-label="Toggle theme"
         aria-expanded={isOpen}
         aria-controls="theme-menu"
+        style={{ color: isDark ? '#ffffff' : '#000000' }}
       >
         <ThemeIcon className="h-5 w-5" />
       </motion.button>
@@ -37,7 +38,7 @@ export function ThemeSwitcher() {
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             id="theme-menu"
-            className="absolute right-0 mt-2 w-36 bg-background-elevated rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700"
+            className="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100 dark:border-gray-700"
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="theme-menu-button"
@@ -81,11 +82,12 @@ function ThemeOption({ icon: Icon, label, isActive, onClick }: ThemeOptionProps)
       whileHover={{ x: 2 }}
       className={`flex items-center w-full px-4 py-2 text-sm ${
         isActive 
-          ? 'text-brand-gradient font-medium' 
-          : 'text-gray-700 dark:text-gray-300'
-      } hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-colors duration-150`}
+          ? 'text-brand-gradient font-semibold' 
+          : 'text-gray-900 dark:text-gray-200'
+      } hover:bg-white hover:shadow-sm dark:hover:bg-gray-700 focus:outline-none focus:bg-white dark:focus:bg-gray-700 transition-all duration-150`}
       onClick={onClick}
       role="menuitem"
+      style={isActive ? undefined : { color: '#000000' }}
     >
       <Icon className="h-4 w-4 mr-2" aria-hidden="true" />
       {label}

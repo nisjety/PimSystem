@@ -26,13 +26,13 @@ export function StatCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: delay * 0.1 }}
-      className="bg-gray-800 rounded-lg p-6 transform transition-all hover:translate-y-[-2px] hover:shadow-xl"
+      className="bg-gray-800/80 backdrop-blur-md rounded-lg p-6 transform transition-all hover:translate-y-[-2px] hover:shadow-xl"
     >
       {isLoading ? (
         <div className="animate-pulse space-y-3">
-          <div className="h-6 bg-gray-700 rounded w-1/3"></div>
-          <div className="h-10 bg-gray-700 rounded w-2/3"></div>
-          <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+          <div className="h-6 bg-gray-700/80 backdrop-blur-sm rounded w-1/3"></div>
+          <div className="h-10 bg-gray-700/80 backdrop-blur-sm rounded w-2/3"></div>
+          <div className="h-4 bg-gray-700/80 backdrop-blur-sm rounded w-1/2"></div>
         </div>
       ) : (
         <>

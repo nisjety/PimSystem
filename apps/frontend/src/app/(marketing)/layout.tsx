@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MarketingNavbar } from '@/components/core/layout/marketing-navbar';
 import { Footer } from '@/components/core/layout/footer';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
-import { BgPattern } from '@/components/home/bg-pattern';
 
 export default function MarketingLayout({
   children,
@@ -17,11 +16,17 @@ export default function MarketingLayout({
 
   return (
     <ThemeProvider defaultTheme="light">
-      <div className="relative flex flex-col min-h-screen bg-background overflow-hidden">
-        {/* Silky waves pattern */}
-        <div className="absolute inset-0 text-cream-200 opacity-10 dark:opacity-20 pointer-events-none">
-          <BgPattern />
-        </div>
+      <div className="relative flex flex-col min-h-screen overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="fixed inset-0 z-0" 
+          style={{
+            backgroundImage: 'url("/images/flowi-hero.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: 0.9
+          }}
+        />
 
         {/* Navbar */}
         <MarketingNavbar />

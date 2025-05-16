@@ -1,26 +1,24 @@
 // src/app/(marketing)/page.tsx
 'use client';
 
-import { HeroSection } from '@/components/home/hero-section';
-import { FeaturesSection } from '@/components/home/features-section';
-import { BenefitsSection } from '@/components/home/benefits-section';
-import { StatsSection } from '@/components/home/stats-section';
-import { IntegrationSection } from '@/components/home/integration-section';
-import { QuickLinksSection } from '@/components/home/quick-links-section';
-import { CallToActionSection } from '@/components/home/call-to-action-section';
-import { TeamSection } from '@/components/home/team-section';
+import { HeroSection } from '@/components/(marketing)/home/hero-section';
+import { FeaturesSection } from '@/components/(marketing)/features/features-section';
+import { BenefitsSection } from '@/components/(marketing)/home/benefits-section';
+import { StatsSection } from '@/components/(marketing)/home/stats-section';
+import { IntegrationSection } from '@/components/(marketing)/home/integration-section';
+import { QuickLinksSection } from '@/components/(marketing)/home/quick-links-section';
+import { CallToActionSection } from '@/components/(marketing)/about/call-to-action-section';
 
 export default function LandingPage() {
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen">
       <HeroSection />
-      <StatsSection />
-      <FeaturesSection />
-      <BenefitsSection />
-      <IntegrationSection />
-      <QuickLinksSection />
-      <CallToActionSection />
-      <TeamSection />
+      <IntegrationSection />           
+      <BenefitsSection />              
+      <StatsSection />                 
+      <FeaturesSection />             
+      <QuickLinksSection />           
+      <CallToActionSection />         
     </div>
   );
 }

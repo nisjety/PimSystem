@@ -90,7 +90,7 @@ function TeamMemberCard({ member, delay }: TeamMemberCardProps) {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3, delay }}
-      className="bg-gray-700 rounded-lg p-4 flex flex-col items-center"
+      className="bg-gray-700/80 backdrop-blur-md rounded-lg p-4 flex flex-col items-center"
     >
       <div className={`h-16 w-16 rounded-full overflow-hidden ${member.bgColor} mb-3 flex items-center justify-center`}>
         {member.avatarUrl ? (

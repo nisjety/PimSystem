@@ -15,9 +15,9 @@ export function ActionCard({ title, description, icon: Icon, href, color }: Acti
   return (
     <Link 
       href={href}
-      className="relative group p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex items-start space-x-4"
+      className="relative group p-6 bg-white/80 backdrop-blur-md rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex items-start space-x-4"
     >
-      <div className={`${color} p-3 rounded-lg text-white group-hover:scale-110 transition-transform duration-200`}>
+      <div className={`${color} bg-opacity-90 backdrop-blur-sm p-3 rounded-lg text-white group-hover:scale-110 transition-transform duration-200`}>
         <Icon className="w-6 h-6" />
       </div>
       <div>
